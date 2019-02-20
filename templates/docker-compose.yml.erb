@@ -1,0 +1,65 @@
+version: '3'
+
+services:
+  db:
+    image: mariadb
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    restart: always
+    volumes:
+      - mariadb:/var/lib/mysql
+    env_file:
+      - .env
+
+  redis:
+    image: redis:alpine
+    restart: always
+
+  nextcloud:
+    image: nextcloud:apache
+    restart: always
+    ports:
+      - 80:80
+    volumes:
+      - nextcloud:/var/www/html
+      - files:/var/www/html/data
+    environment:
+      - MYSQL_HOST=db
+      - REDIS_HOST=redis
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis
+
+  traefik:
+    image: traefik:1.7.4
+    container_name: traefik
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+      - 8081:8080
+    networks:
+      - default
+      - web
+    logging:
+      driver: "json-file"
+      options:
+        max-size: '10m'
+        max-file: '5'
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik.log:/var/log/traefik.log
+      - ${TRAEFIK_TOML_FILE:-./traefik.dev.toml}:/traefik.toml
+      - ${CERTDIR:-/etc/letsencrypt}:/etc/letsencrypt
+
+
+volumes:
+    mariadb:${PATH_DATABASE:-/data/database}
+    nextcloud:${PATH_NEXTCLOUD:-/data/nextcloud}
+    files:{$PATH_FILES:-/data/files}
+
+networks:
+    default:
+    web:
+        external: true
