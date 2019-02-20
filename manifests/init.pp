@@ -30,7 +30,7 @@ class role_nextcloud (
   $traefik_whitelist_array      = ['172.16.0.0/12'],
   $custom_ssl_certfile          = '/etc/ssl/customcert.pem',
   $custom_ssl_certkey           = '/etc/ssl/customkey.pem',
-  $drupal_site_url_array        = ['content.museum.naturalis.nl','www.content.museum.naturalis.nl'],  # first site will be used for traefik certificate
+  $site_url_array        = ['files.museum.naturalis.nl','www.files.museum.naturalis.nl'],  # first site will be used for traefik certificate
 #  $logrotate_hash               = { 'apache2'    => { 'log_path' => '/data/www/log/apache2',
 #                                                      'post_rotate' => "(cd ${repo_dir}; docker-compose exec drupal service apache2 reload)",
 #                                                      'extraline' => 'su root docker'},
@@ -74,8 +74,8 @@ class role_nextcloud (
 
 # define ssl certificate location
   if ( $letsencrypt_certs == true ) {
-    $ssl_certfile = "/etc/letsencrypt/live/${drupal_site_url_array[0]}/fullchain.pem"
-    $ssl_certkey = "/etc/letsencrypt/live/${drupal_site_url_array[0]}/privkey.pem"
+    $ssl_certfile = "/etc/letsencrypt/live/${site_url_array[0]}/fullchain.pem"
+    $ssl_certkey = "/etc/letsencrypt/live/${site_url_array[0]}/privkey.pem"
   }else{
     $ssl_certfile = $custom_ssl_certfile
     $ssl_certkey = $custom_ssl_certkey

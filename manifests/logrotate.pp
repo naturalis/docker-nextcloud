@@ -4,7 +4,7 @@
 #
 #
 #
-define role_drupal::logrotate (
+define role_nextcloud::logrotate (
   $log_path,
   $post_rotate      = undef,
   $pre_rotate       = undef,
