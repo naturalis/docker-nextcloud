@@ -25,29 +25,6 @@ admin password will be reported during installation, when installation is done u
 example ssl enabled virtual hosts with http to https redirect, see init.pp for 
 more example values
 
-```
-role_drupal::instances:
-site-with-ssl.drupalsites.nl: 
-  serveraliases: "*.drupalsites.nl"
-  serveradmin: webmaster@drupalsites.nl
-  port: 443
-  priority: 10
-  directories: 
-  - options: -Indexes +FollowSymLinks +MultiViews
-    path: /var/www/drupal
-    allow_override: All
-  docroot: /var/www/sisdrupal
-  ssl: true
-site-without-ssl.drupalsites.nl: 
-  rewrites: 
-  - rewrite_rule: 
-    - ^(.*)$ https://site-with-ssl.drupalsites.nl/$1 [R,L]
-  serveraliases: "*.drupalsites.nl"
-  serveradmin: webmaster@drupalsites.nl
-  port: 80
-  docroot: /var/www/drupal
-  priority: 5
-```
 
 
 Classes
