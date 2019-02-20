@@ -37,7 +37,7 @@ class role_nextcloud (
 #                                    'mysql'      => { 'log_path' => '/data/database/mysqllog',
 #                                                      'post_rotate' => "(cd ${repo_dir}; docker-compose exec db mysqladmin flush-logs)",
 #                                                      'extraline' => 'su root docker'}
-                                 },
+#                                 },
 
 # sensu check settings
   $checks_defaults    = {
