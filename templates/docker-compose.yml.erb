@@ -5,23 +5,38 @@ services:
     image: mariadb
     command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
     restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: '10m'
+        max-file: '5'
     volumes:
-      - mariadb:/var/lib/mysql
+      - ${PATH_DATABASE:-/data/database}:/var/lib/mysql
     env_file:
       - .env
 
   redis:
     image: redis:alpine
     restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: '10m'
+        max-file: '5'
 
   nextcloud:
     image: nextcloud:apache
     restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: '10m'
+        max-file: '5'
     ports:
       - 80:80
     volumes:
-      - nextcloud:/var/www/html
-      - files:/var/www/html/data
+      - ${PATH_NEXTCLOUD:-/data/nextcloud}:/var/www/html
+      - ${PATH_FILES:-/data/nextcloud}:/var/www/html/data
     environment:
       - MYSQL_HOST=db
       - REDIS_HOST=redis
@@ -52,12 +67,6 @@ services:
       - ./traefik.log:/var/log/traefik.log
       - ${TRAEFIK_TOML_FILE:-./traefik.dev.toml}:/traefik.toml
       - ${CERTDIR:-/etc/letsencrypt}:/etc/letsencrypt
-
-
-volumes:
-    mariadb:${PATH_DATABASE:-/data/database}
-    nextcloud:${PATH_NEXTCLOUD:-/data/nextcloud}
-    files:{$PATH_FILES:-/data/files}
 
 networks:
     default:

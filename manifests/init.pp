@@ -111,7 +111,7 @@ class role_nextcloud (
     require     => File["${role_nextcloud::repo_dir}/.env"]
   }
 
-  docker_network { 'web':
+  docker_network { ['web']:
     ensure   => present,
   }
 
@@ -122,7 +122,7 @@ class role_nextcloud (
     options     => "-p ${role_nextcloud::repo_dir} ",
     require     => [
       File[$role_nextcloud::repo_dir],
-      Docker_network['default'],
+      Docker_network['web'],
       File["${role_nextcloud::repo_dir}/.env"]
     ]
   }
