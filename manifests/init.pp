@@ -114,7 +114,7 @@ class role_nextcloud (
     ensure      => present,
     options     => "-p ${role_nextcloud::repo_dir} ",
     require     => [
-      Vcsrepo[$role_nextcloud::repo_dir],
+      File[$role_nextcloud::repo_dir],
       Docker_network['default'],
       File["${role_nextcloud::repo_dir}/.env"]
     ]
