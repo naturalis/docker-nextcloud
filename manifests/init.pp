@@ -88,6 +88,13 @@ class role_nextcloud (
     notify   => Exec['Restart traefik on change'],
   }
 
+ file { "${role_nextcloud::repo_dir}/docker-compose.yml" :
+    ensure   => file,
+    content  => template('role_nextcloud/docker-compose.yml.erb'),
+    require  => File[$role_nextcloud::repo_dir],
+    notify   => Exec['Restart containers on change'],
+  }
+
   file { "${role_nextcloud::repo_dir}/.env":
     ensure   => file,
     mode     => '0600',
