@@ -24,7 +24,7 @@ Classes
 Dependencies
 -------------
 - puppetlabs/mysql
-- puppetlabs/apache2
+- puppetlabs/apache
 - puppetlabs/concat
 - puppetlabs/inifile
 - voxpupuli/puppet-php
