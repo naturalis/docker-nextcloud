@@ -1,9 +1,4 @@
-# drupal Logrotate creation
-#
-#
-#
-#
-#
+# nextcloud Logrotate creation
 define role_nextcloud::logrotate (
   $log_path,
   $post_rotate      = undef,
