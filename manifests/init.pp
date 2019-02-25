@@ -66,6 +66,14 @@ class role_nextcloud (
     require             => Class['docker'],
   }
 
+  file { ['/data/files'] :
+    ensure              => directory,
+    owner               => 'www-data',
+    group               => 'www-data',
+    mode                => '0770',
+    require             => File['/data']
+  }
+
   file { $role_nextcloud::repo_dir:
     ensure              => directory,
     mode                => '0770',
@@ -117,15 +125,15 @@ class role_nextcloud (
 
   ensure_packages(['git','python3'], { ensure => 'present' })
 
-  docker_compose { "${role_nextcloud::repo_dir}/docker-compose.yml":
-    ensure      => present,
-    options     => "-p ${role_nextcloud::repo_dir} ",
-    require     => [
-      File[$role_nextcloud::repo_dir],
-      Docker_network['web'],
-      File["${role_nextcloud::repo_dir}/.env"]
-    ]
-  }
+#  docker_compose { "${role_nextcloud::repo_dir}/docker-compose.yml":
+#    ensure      => present,
+#    options     => "-p ${role_nextcloud::repo_dir} ",
+#    require     => [
+#      File[$role_nextcloud::repo_dir],
+#      Docker_network['web'],
+#      File["${role_nextcloud::repo_dir}/.env"]
+#    ]
+#  }
 
   exec { 'Pull containers' :
     command  => 'docker-compose pull',
