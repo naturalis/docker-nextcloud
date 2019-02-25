@@ -3,7 +3,7 @@ version: '3'
 services:
   db:
     image: mariadb
-    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    command: --transaction-isolation=READ-COMMITTED --log-bin=/var/log/mysql/mariadb-bin --binlog-format=ROW
     restart: always
     logging:
       driver: "json-file"
