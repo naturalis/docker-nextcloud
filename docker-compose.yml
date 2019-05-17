@@ -1,37 +1,32 @@
-version: '3'
+version: '3.4'
+
+x-logging:
+  &default-logging
+  options:
+    max-size: '10m'
+    max-file: '5'
+  driver: json-file
 
 services:
   db:
-    image: mariadb
+    image: mariadb:10.3
     command: --transaction-isolation=READ-COMMITTED --log-bin=/var/log/mysql/mariadb-bin --binlog-format=ROW
     restart: unless-stopped
-    logging:
-      driver: "json-file"
-      options:
-        max-size: '10m'
-        max-file: '5'
+    logging: *default-logging
     volumes:
       - ${PATH_DATABASE:-/data/database}:/var/lib/mysql
     env_file:
       - .env
 
   redis:
-    image: redis:alpine
+    image: redis:5.0.5-alpine
     restart: unless-stopped
-    logging:
-      driver: "json-file"
-      options:
-        max-size: '10m'
-        max-file: '5'
+    logging: *default-logging
 
   nextcloud:
-    image: nextcloud:apache
+    image: nextcloud:16-apache
     restart: unless-stopped
-    logging:
-      driver: "json-file"
-      options:
-        max-size: '10m'
-        max-file: '5'
+    logging: *default-logging
     labels:
       - "traefik.backend=naturalis-nextcloud"
       - "traefik.enable=true"
@@ -50,7 +45,7 @@ services:
       - redis
 
   traefik:
-    image: traefik:1.7.4
+    image: traefik:1.7.11
     restart: unless-stopped
     ports:
       - 80:80
@@ -59,14 +54,9 @@ services:
     networks:
       - default
       - web
-    logging:
-      driver: "json-file"
-      options:
-        max-size: '10m'
-        max-file: '5'
+    logging: *default-logging
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./traefik.log:/var/log/traefik.log
       - ${TRAEFIK_TOML_FILE:-./traefik.dev.toml}:/traefik.toml
       - ${CERTDIR:-/etc/letsencrypt}:/etc/letsencrypt
 
